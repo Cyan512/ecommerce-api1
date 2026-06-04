@@ -1,11 +1,11 @@
 package com.ecommerce.user.infrastructure.persistence;
 
-import com.ecommerce.user.domain.model.AuthProvider;
-import com.ecommerce.user.domain.model.User;
+import com.ecommerce.user.domain.model.*;
 import com.ecommerce.user.domain.port.UserRepositoryPort;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class UserRepositoryAdapter implements UserRepositoryPort {
@@ -22,14 +22,14 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Optional<User> findByProviderAndProviderId(AuthProvider provider, String providerId) {
-        return jpaRepository.findByProviderAndProviderId(provider, providerId).map(this::toDomain);
+    public Optional<User> findByOauthProviderAndOauthId(String oauthProvider, String oauthId) {
+        return jpaRepository.findByOauthProviderAndOauthId(oauthProvider, oauthId).map(this::toDomain);
     }
 
     @Override
     public User save(User user) {
         UserEntity entity = toEntity(user);
-        return toDomain(jpaRepository.save(entity));
+        return jpaRepository.save(entity).toDomain();
     }
 
     @Override
@@ -37,29 +37,31 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return jpaRepository.existsByEmail(email);
     }
 
+    @Override
+    public Optional<User> findById(UUID id) {
+        return jpaRepository.findById(id).map(this::toDomain);
+    }
+
     private User toDomain(UserEntity entity) {
-        User user = new User();
-        user.setId(entity.getId());
-        user.setEmail(entity.getEmail());
-        user.setPassword(entity.getPassword());
-        user.setName(entity.getName());
-        user.setProvider(entity.getProvider());
-        user.setProviderId(entity.getProviderId());
-        user.setRoles(entity.getRoles());
-        user.setEnabled(entity.isEnabled());
-        return user;
+        return entity.toDomain();
     }
 
     private UserEntity toEntity(User user) {
-        UserEntity entity = new UserEntity();
-        entity.setId(user.getId());
-        entity.setEmail(user.getEmail());
-        entity.setPassword(user.getPassword());
-        entity.setName(user.getName());
-        entity.setProvider(user.getProvider());
-        entity.setProviderId(user.getProviderId());
-        entity.setRoles(user.getRoles());
-        entity.setEnabled(user.isEnabled());
-        return entity;
+        if (user instanceof Cliente) {
+            ClienteEntity entity = new ClienteEntity();
+            entity.fromDomain(user);
+            return entity;
+        }
+        if (user instanceof Administrador) {
+            AdministradorEntity entity = new AdministradorEntity();
+            entity.fromDomain(user);
+            return entity;
+        }
+        if (user instanceof Vendedor) {
+            VendedorEntity entity = new VendedorEntity();
+            entity.fromDomain(user);
+            return entity;
+        }
+        throw new IllegalArgumentException("Tipo de usuario desconocido: " + user.getClass());
     }
 }

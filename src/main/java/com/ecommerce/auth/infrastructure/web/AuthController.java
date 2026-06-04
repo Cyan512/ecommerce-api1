@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -34,15 +32,15 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        AuthUser authUser = localLoginUseCase.register(request.getEmail(), request.getPassword(), request.getName());
+        AuthUser authUser = localLoginUseCase.register(request.getEmail(), request.getPassword(), request.getNombre());
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(authUser));
     }
 
     @PostMapping("/google")
     public ResponseEntity<AuthResponse> googleLogin(@RequestParam String email,
-                                                    @RequestParam String name,
+                                                    @RequestParam String nombre,
                                                     @RequestParam("google_id") String googleId) {
-        AuthUser authUser = googleLoginUseCase.loginWithGoogle(email, name, googleId);
+        AuthUser authUser = googleLoginUseCase.loginWithGoogle(email, nombre, googleId);
         return ResponseEntity.ok(toResponse(authUser));
     }
 
@@ -55,8 +53,8 @@ public class AuthController {
         return new AuthResponse(
                 authUser.getToken(),
                 authUser.getEmail(),
-                authUser.getName(),
-                authUser.getRoles().stream().map(Enum::name).collect(Collectors.toList())
+                authUser.getNombre(),
+                authUser.getTipo().name()
         );
     }
 }

@@ -6,7 +6,7 @@ public interface AuthInputPort {
 
     AuthUser login(String email, String password);
 
-    AuthUser register(String email, String password, String name);
+    AuthUser register(String email, String password, String nombre);
 
-    AuthUser loginWithGoogle(String email, String name, String googleId);
+    AuthUser loginWithGoogle(String email, String nombre, String googleId);
 }

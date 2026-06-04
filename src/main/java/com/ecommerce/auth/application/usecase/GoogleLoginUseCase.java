@@ -3,13 +3,12 @@ package com.ecommerce.auth.application.usecase;
 import com.ecommerce.auth.domain.model.AuthUser;
 import com.ecommerce.auth.domain.port.AuthInputPort;
 import com.ecommerce.auth.domain.port.TokenPort;
-import com.ecommerce.user.domain.model.AuthProvider;
-import com.ecommerce.user.domain.model.Role;
+import com.ecommerce.user.domain.model.Cliente;
 import com.ecommerce.user.domain.model.User;
 import com.ecommerce.user.domain.port.UserRepositoryPort;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Service
 public class GoogleLoginUseCase implements AuthInputPort {
@@ -28,29 +27,29 @@ public class GoogleLoginUseCase implements AuthInputPort {
     }
 
     @Override
-    public AuthUser register(String email, String password, String name) {
+    public AuthUser register(String email, String password, String nombre) {
         throw new UnsupportedOperationException("Usar LocalLoginUseCase para registro local");
     }
 
     @Override
-    public AuthUser loginWithGoogle(String email, String name, String googleId) {
-        User user = userRepository.findByProviderAndProviderId(AuthProvider.GOOGLE, googleId)
+    public AuthUser loginWithGoogle(String email, String nombre, String googleId) {
+        User user = userRepository.findByOauthProviderAndOauthId("google", googleId)
                 .orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setEmail(email);
-                    newUser.setName(name);
-                    newUser.setProvider(AuthProvider.GOOGLE);
-                    newUser.setProviderId(googleId);
-                    newUser.setRoles(Set.of(Role.ROLE_USER));
-                    newUser.setEnabled(true);
-                    return userRepository.save(newUser);
+                    Cliente nuevo = new Cliente();
+                    nuevo.setEmail(email);
+                    nuevo.setNombre(nombre);
+                    nuevo.setOauthProvider("google");
+                    nuevo.setOauthId(googleId);
+                    nuevo.setFechaRegistro(LocalDateTime.now());
+                    nuevo.setActivo(true);
+                    return userRepository.save(nuevo);
                 });
 
-        if (!user.isEnabled()) {
+        if (!user.isActivo()) {
             throw new RuntimeException("Usuario deshabilitado");
         }
 
         String token = tokenPort.generateToken(user);
-        return new AuthUser(user.getId(), user.getEmail(), user.getName(), user.getRoles(), token);
+        return new AuthUser(user.getId(), user.getEmail(), user.getNombre(), user.getTipo(), token);
     }
 }

@@ -1,28 +1,28 @@
 package com.ecommerce.auth.domain.model;
 
-import com.ecommerce.user.domain.model.Role;
+import com.ecommerce.user.domain.model.TipoUsuario;
 
-import java.util.Set;
+import java.util.UUID;
 
 public class AuthUser {
 
-    private final Long id;
+    private final UUID id;
     private final String email;
-    private final String name;
-    private final Set<Role> roles;
+    private final String nombre;
+    private final TipoUsuario tipo;
     private final String token;
 
-    public AuthUser(Long id, String email, String name, Set<Role> roles, String token) {
+    public AuthUser(UUID id, String email, String nombre, TipoUsuario tipo, String token) {
         this.id = id;
         this.email = email;
-        this.name = name;
-        this.roles = roles;
+        this.nombre = nombre;
+        this.tipo = tipo;
         this.token = token;
     }
 
-    public Long getId() { return id; }
+    public UUID getId() { return id; }
     public String getEmail() { return email; }
-    public String getName() { return name; }
-    public Set<Role> getRoles() { return roles; }
+    public String getNombre() { return nombre; }
+    public TipoUsuario getTipo() { return tipo; }
     public String getToken() { return token; }
 }

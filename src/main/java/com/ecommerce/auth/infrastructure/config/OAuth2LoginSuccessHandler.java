@@ -20,7 +20,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final String frontendUrl;
 
     public OAuth2LoginSuccessHandler(@Qualifier("googleLoginUseCase") AuthInputPort googleLoginUseCase,
-                                     @Value("${app.frontend-url:http://localhost:4200}") String frontendUrl) {
+                                     @Value("${app.frontend-url:http://localhost:5173}") String frontendUrl) {
         this.googleLoginUseCase = googleLoginUseCase;
         this.frontendUrl = frontendUrl;
     }
@@ -31,10 +31,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         String email = oauthToken.getPrincipal().getAttribute("email");
-        String name = oauthToken.getPrincipal().getAttribute("name");
+        String nombre = oauthToken.getPrincipal().getAttribute("name");
         String googleId = oauthToken.getPrincipal().getAttribute("sub");
 
-        AuthUser authUser = googleLoginUseCase.loginWithGoogle(email, name, googleId);
+        AuthUser authUser = googleLoginUseCase.loginWithGoogle(email, nombre, googleId);
 
         response.sendRedirect(frontendUrl + "/auth/callback?token=" + authUser.getToken());
     }

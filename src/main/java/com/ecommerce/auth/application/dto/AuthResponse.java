@@ -1,29 +1,27 @@
 package com.ecommerce.auth.application.dto;
 
-import java.util.List;
-
 public class AuthResponse {
 
     private String token;
     private String email;
-    private String name;
-    private List<String> roles;
+    private String nombre;
+    private String tipo;
 
     public AuthResponse() {}
 
-    public AuthResponse(String token, String email, String name, List<String> roles) {
+    public AuthResponse(String token, String email, String nombre, String tipo) {
         this.token = token;
         this.email = email;
-        this.name = name;
-        this.roles = roles;
+        this.nombre = nombre;
+        this.tipo = tipo;
     }
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public List<String> getRoles() { return roles; }
-    public void setRoles(List<String> roles) { this.roles = roles; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 }

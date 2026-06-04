@@ -1,7 +1,6 @@
 package com.ecommerce.auth.infrastructure.config;
 
 import com.ecommerce.auth.domain.port.TokenPort;
-import com.ecommerce.user.domain.model.Role;
 import com.ecommerce.user.domain.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -11,8 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Component
 public class JwtUtil implements TokenPort {
@@ -26,19 +24,16 @@ public class JwtUtil implements TokenPort {
         this.expiration = expiration;
     }
 
+    @Override
     public String generateToken(User user) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiration);
 
-        List<String> roles = user.getRoles().stream()
-                .map(Role::name)
-                .collect(Collectors.toList());
-
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())
-                .claim("name", user.getName())
-                .claim("roles", roles)
+                .claim("nombre", user.getNombre())
+                .claim("tipo", user.getTipo().name())
                 .issuedAt(now)
                 .expiration(expiry)
                 .signWith(secretKey)
@@ -53,10 +48,12 @@ public class JwtUtil implements TokenPort {
                 .getPayload();
     }
 
-    public Long getUserIdFromToken(String token) {
-        return Long.parseLong(validateToken(token).getSubject());
+    @Override
+    public UUID getUserIdFromToken(String token) {
+        return UUID.fromString(validateToken(token).getSubject());
     }
 
+    @Override
     public boolean isTokenValid(String token) {
         try {
             validateToken(token);
