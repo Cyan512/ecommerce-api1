@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+title CASOS DE USO - Direcciones
+
+actor "Cliente" as cliente
+
+rectangle "Direcciones" {
+  usecase "Listar mis\ndirecciones" as UC1
+  usecase "Agregar\ndirección" as UC2
+  usecase "Eliminar\ndirección" as UC3
+}
+
+cliente --> UC1
+cliente --> UC2
+cliente --> UC3
+@enduml

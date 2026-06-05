@@ -1,0 +1,34 @@
+@startuml
+actor Cliente
+participant AuthController
+participant AuthUseCase
+participant UserRepositoryPort
+participant JwtUtil
+database PostgreSQL
+
+Cliente -> AuthController: POST /api/auth/login\n{email, password}
+AuthController -> AuthUseCase: login(email, password)
+AuthUseCase -> UserRepositoryPort: findByEmail(email)
+UserRepositoryPort -> PostgreSQL: SELECT * FROM users\nWHERE email = ?
+PostgreSQL --> UserRepositoryPort: User (or empty)
+UserRepositoryPort --> AuthUseCase: Optional<User>
+
+alt Usuario no encontrado
+  AuthUseCase --> AuthController: BusinessException("Credenciales inválidas")
+  AuthController --> Cliente: 400 Bad Request
+else Usuario deshabilitado
+  AuthUseCase --> AuthController: BusinessException("Credenciales inválidas")
+  AuthController --> Cliente: 400 Bad Request
+else Usuario encontrado y activo
+  AuthUseCase -> AuthUseCase: passwordEncoder.matches(password, user.password)
+  alt Contraseña incorrecta
+    AuthUseCase --> AuthController: BusinessException("Credenciales inválidas")
+    AuthController --> Cliente: 400 Bad Request
+  else Contraseña correcta
+    AuthUseCase -> JwtUtil: generateToken(user)
+    JwtUtil --> AuthUseCase: JWT String
+    AuthUseCase --> AuthController: LoginResponse{token, email, nombre, tipo}
+    AuthController --> Cliente: 200 OK
+  end
+end
+@enduml

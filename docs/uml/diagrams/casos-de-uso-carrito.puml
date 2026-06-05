@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+title CASOS DE USO - Carrito y Wishlist
+
+actor "Cliente" as cliente
+
+rectangle "Carrito de Compras" {
+  usecase "Ver mi carrito" as UC1
+  usecase "Agregar producto\nal carrito" as UC2
+  usecase "Eliminar item\ndel carrito" as UC3
+  usecase "Vaciar carrito" as UC4
+}
+
+rectangle "Wishlist" {
+  usecase "Ver mi wishlist" as UC5
+  usecase "Agregar producto\na wishlist" as UC6
+  usecase "Eliminar item\nde wishlist" as UC7
+}
+
+cliente --> UC1
+cliente --> UC2
+cliente --> UC3
+cliente --> UC4
+cliente --> UC5
+cliente --> UC6
+cliente --> UC7
+@enduml

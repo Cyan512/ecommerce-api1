@@ -1,0 +1,38 @@
+@startuml
+left to right direction
+title CASOS DE USO - Administración
+
+actor "Administrador" as admin
+
+rectangle "Gestión de Productos" {
+  usecase "Crear producto" as UC1
+  usecase "Actualizar\nproducto" as UC2
+  usecase "Desactivar\nproducto" as UC3
+}
+
+rectangle "Gestión de Categorías" {
+  usecase "Crear categoría" as UC4
+  usecase "Actualizar\ncategoría" as UC5
+  usecase "Eliminar\ncategoría" as UC6
+}
+
+rectangle "Gestión de Usuarios" {
+  usecase "Listar usuarios" as UC7
+  usecase "Crear usuario\n(con rol)" as UC8
+  usecase "Bloquear usuario" as UC9
+  usecase "Desbloquear\nusuario" as UC10
+  usecase "Eliminar\nusuario" as UC11
+}
+
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC4
+admin --> UC5
+admin --> UC6
+admin --> UC7
+admin --> UC8
+admin --> UC9
+admin --> UC10
+admin --> UC11
+@enduml

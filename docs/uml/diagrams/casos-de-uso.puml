@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+title CASOS DE USO - GENERAL
+
+actor "Cliente" as cliente
+actor "Administrador" as admin
+actor "Vendedor" as vendedor
+actor "Google OAuth2" as google
+
+rectangle "Ecommerce API" {
+  usecase "Gestionar Cuenta" as UC_AUTH
+  usecase "Navegar Catálogo" as UC_CATALOG
+  usecase "Gestionar Carrito" as UC_CART
+  usecase "Gestionar Wishlist" as UC_WISHLIST
+  usecase "Gestionar Pedidos" as UC_ORDERS
+  usecase "Gestionar Direcciones" as UC_DIR
+  usecase "Gestionar Productos" as UC_PROD
+  usecase "Gestionar Categorías" as UC_CAT
+  usecase "Gestionar Usuarios" as UC_USERS
+}
+
+cliente --> UC_AUTH
+cliente --> UC_CATALOG
+cliente --> UC_CART
+cliente --> UC_WISHLIST
+cliente --> UC_ORDERS
+cliente --> UC_DIR
+
+admin --> UC_AUTH
+admin --> UC_PROD
+admin --> UC_CAT
+admin --> UC_ORDERS
+admin --> UC_USERS
+admin --> UC_CATALOG
+
+vendedor --> UC_ORDERS
+
+google --> UC_AUTH
+
+note right of UC_AUTH : Ver diagrama\ncasos-de-uso-auth.puml
+note right of UC_CATALOG : Ver diagrama\ncasos-de-uso-catalogo.puml
+note right of UC_CART : Ver diagrama\ncasos-de-uso-carrito.puml
+note right of UC_ORDERS : Ver diagrama\ncasos-de-uso-pedidos.puml
+note right of UC_PROD : Ver diagrama\ncasos-de-uso-admin.puml
+note right of UC_USERS : Ver diagrama\ncasos-de-uso-admin.puml
+@enduml

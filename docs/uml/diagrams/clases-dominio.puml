@@ -1,0 +1,193 @@
+@startuml
+package "Dominio" {
+  abstract class User {
+    - UUID id
+    - String nombre
+    - String email
+    - String password
+    - String telefono
+    - String oauthProvider
+    - String oauthId
+    - TipoUsuario tipo
+    - LocalDateTime fechaRegistro
+    - boolean activo
+  }
+
+  class Cliente extends User
+  class Administrador extends User
+  class Vendedor extends User
+
+  enum TipoUsuario {
+    CLIENTE
+    ADMINISTRADOR
+    VENDEDOR
+  }
+
+  class Direccion {
+    - UUID id
+    - UUID usuarioId
+    - String calle
+    - String colonia
+    - String ciudad
+    - String estado
+    - String codigoPostal
+    - String pais
+    - boolean principal
+  }
+
+  class Categoria {
+    - UUID id
+    - String nombre
+    - String descripcion
+    - UUID padreId
+  }
+
+  class Producto {
+    - UUID id
+    - String nombre
+    - String descripcion
+    - BigDecimal precio
+    - int stock
+    - UUID categoriaId
+    - String imagenUrl
+    - boolean activo
+  }
+
+  class Resenia {
+    - UUID id
+    - UUID usuarioId
+    - UUID productoId
+    - int calificacion
+    - String comentario
+    - LocalDateTime fecha
+  }
+
+  class Carrito {
+    - UUID id
+    - UUID usuarioId
+  }
+
+  class CarritoItem {
+    - UUID id
+    - UUID carritoId
+    - UUID productoId
+    - int cantidad
+  }
+
+  class Wishlist {
+    - UUID id
+    - UUID usuarioId
+  }
+
+  class WishlistItem {
+    - UUID id
+    - UUID wishlistId
+    - UUID productoId
+  }
+
+  class Pedido {
+    - UUID id
+    - UUID usuarioId
+    - UUID direccionId
+    - UUID staffId
+    - UUID cuponId
+    - BigDecimal subtotal
+    - BigDecimal descuento
+    - BigDecimal total
+    - EstadoPedido estado
+    - LocalDateTime fechaCreacion
+    - LocalDateTime fechaActualizacion
+  }
+
+  enum EstadoPedido {
+    PENDIENTE
+    CONFIRMADO
+    ENVIADO
+    ENTREGADO
+    CANCELADO
+  }
+
+  class PedidoItem {
+    - UUID id
+    - UUID pedidoId
+    - UUID productoId
+    - int cantidad
+    - BigDecimal precioUnitario
+    - BigDecimal subtotal
+  }
+
+  class Pago {
+    - UUID id
+    - UUID pedidoId
+    - BigDecimal monto
+    - String metodoPago
+    - String transaccionId
+    - EstadoPago estado
+    - LocalDateTime fecha
+  }
+
+  enum EstadoPago {
+    PENDIENTE
+    PAGADO
+    FALLIDO
+    REEMBOLSADO
+  }
+
+  class Envio {
+    - UUID id
+    - UUID pedidoId
+    - String direccion
+    - String transportista
+    - String numeroGuia
+    - EstadoEnvio estado
+    - LocalDateTime fechaEnvio
+    - LocalDateTime fechaEntrega
+  }
+
+  enum EstadoEnvio {
+    PENDIENTE
+    ENVIADO
+    ENTREGADO
+  }
+
+  class Cupon {
+    - UUID id
+    - String codigo
+    - TipoDescuento tipoDescuento
+    - BigDecimal valorDescuento
+    - BigDecimal montoMinimo
+    - int usosMaximos
+    - int usosActuales
+    - LocalDateTime fechaExpiracion
+    - boolean activo
+  }
+
+  enum TipoDescuento {
+    PORCENTAJE
+    MONTO_FIJO
+  }
+}
+
+User <|-- Cliente
+User <|-- Administrador
+User <|-- Vendedor
+User -- TipoUsuario
+
+Direccion --> User : usuarioId
+Producto --> Categoria : categoriaId
+Resenia --> User : usuarioId
+Resenia --> Producto : productoId
+Carrito --> User : usuarioId
+CarritoItem --> Carrito : carritoId
+CarritoItem --> Producto : productoId
+Wishlist --> User : usuarioId
+WishlistItem --> Wishlist : wishlistId
+WishlistItem --> Producto : productoId
+Pedido --> User : usuarioId
+Pedido --> Direccion : direccionId
+Pedido --> Cupon : cuponId
+PedidoItem --> Pedido : pedidoId
+PedidoItem --> Producto : productoId
+Pago --> Pedido : pedidoId
+Envio --> Pedido : pedidoId
+@enduml

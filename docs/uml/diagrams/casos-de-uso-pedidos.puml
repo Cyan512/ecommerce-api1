@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+title CASOS DE USO - Pedidos
+
+actor "Cliente" as cliente
+actor "Administrador" as admin
+actor "Vendedor" as vendedor
+
+rectangle "Pedidos" {
+  usecase "Realizar pedido" as UC1
+  usecase "Ver mis pedidos" as UC2
+  usecase "Ver detalle\nde pedido" as UC3
+  usecase "Aplicar cupón\nde descuento" as UC4
+  usecase "Consultar cupón\npor código" as UC5
+  usecase "Listar todos\nlos pedidos" as UC6
+  usecase "Cambiar estado\nde pedido" as UC7
+}
+
+cliente --> UC1
+cliente --> UC2
+cliente --> UC3
+cliente --> UC4
+
+admin --> UC6
+admin --> UC7
+
+vendedor --> UC6
+@enduml

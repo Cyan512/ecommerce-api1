@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+title CASOS DE USO - Navegar Catálogo
+
+actor "Cliente" as cliente
+actor "Invitado" as invitado
+
+rectangle "Catálogo" {
+  usecase "Listar productos\nactivos" as UC1
+  usecase "Ver detalle\nde producto" as UC2
+  usecase "Filtrar por\ncategoría" as UC3
+  usecase "Ver reseñas\nde producto" as UC4
+  usecase "Escribir reseña" as UC5
+  usecase "Subir imagen\na Cloudinary" as UC6
+}
+
+cliente --> UC1
+cliente --> UC2
+cliente --> UC3
+cliente --> UC4
+cliente --> UC5
+
+invitado --> UC1
+invitado --> UC2
+invitado --> UC3
+invitado --> UC4
+@enduml

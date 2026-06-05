@@ -1,0 +1,31 @@
+@startuml
+left to right direction
+title CASOS DE USO - Gestión de Cuenta
+
+actor "Cliente" as cliente
+actor "Administrador" as admin
+actor "Google OAuth2" as google
+
+rectangle "Autenticación" {
+  usecase "Registrarse" as UC1
+  usecase "Iniciar sesión\n(email/password)" as UC2
+  usecase "Iniciar sesión\n(Google OAuth2)" as UC3
+  usecase "Ver mi perfil" as UC4
+  usecase "Cambiar contraseña" as UC5
+  usecase "Cambiar nombre" as UC6
+}
+
+cliente --> UC1
+cliente --> UC2
+cliente --> UC3
+cliente --> UC4
+cliente --> UC5
+cliente --> UC6
+
+admin --> UC2
+admin --> UC4
+admin --> UC5
+admin --> UC6
+
+google --> UC3
+@enduml

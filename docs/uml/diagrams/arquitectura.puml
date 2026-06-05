@@ -1,0 +1,59 @@
+@startuml
+skinparam packageStyle rectangle
+title ARQUITECTURA - Hexagonal + Vertical Slicing
+
+package "INFRASTRUCTURE" as INFRA {
+  [SecurityConfig (JWT + OAuth2)]
+  [CloudinaryService]
+  [UserRepositoryAdapter]
+  [ProductoRepositoryAdapter]
+  [PedidoRepositoryAdapter]
+  [AuthController]
+  [UserController]
+  [ProfileController]
+  [ProductoController]
+  [AdminProductoController]
+  [CarritoController]
+  [PedidoController]
+  [AdminPedidoController]
+}
+
+package "APPLICATION" as APP {
+  [AuthUseCase]
+  [UserUseCase]
+  [AdminUserUseCase]
+  [ProductoUseCase]
+  [CarritoUseCase]
+  [PedidoUseCase]
+  [DireccionUseCase]
+  [RegisterRequest]
+  [LoginRequest]
+  [ProductoRequest]
+  [ProductoResponse]
+  [PedidoRequest]
+  [PedidoResponse]
+  [AdminUserRequest]
+  [AdminUserResponse]
+}
+
+package "DOMAIN" as DOM {
+  [User]
+  [Producto]
+  [Pedido]
+  [Carrito]
+  [Cupon]
+  [Categoria]
+  [UserRepositoryPort]
+  [ProductoRepositoryPort]
+  [PedidoRepositoryPort]
+  [CarritoRepositoryPort]
+  [CuponRepositoryPort]
+}
+
+[CloudinaryService] --> [Cloudinary API]
+
+note right of INFRA : Adaptadores de entrada (Controllers REST)\ny Adaptadores de salida (JPA, Cloudinary)
+note right of APP : Puertos de entrada (UseCases)\ny DTOs
+note right of DOM : Modelo de dominio (entidades puras)\ny Puertos de salida (interfaces)
+
+@enduml

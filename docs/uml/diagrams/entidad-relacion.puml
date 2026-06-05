@@ -1,0 +1,154 @@
+@startuml
+!define table(x) class x << (T,#FFEEEE) >>
+
+table(users) {
+  * id: UUID <<PK>>
+  * nombre: VARCHAR(100)
+  * email: VARCHAR(150) <<UNIQUE>>
+  password: VARCHAR(255)
+  telefono: VARCHAR(20)
+  oauth_provider: VARCHAR(50)
+  oauth_id: VARCHAR(255)
+  tipo: VARCHAR(31) <<DISCRIMINATOR>>
+  * fecha_registro: TIMESTAMP
+  * activo: BOOLEAN
+}
+
+table(direcciones) {
+  * id: UUID <<PK>>
+  * usuario_id: UUID <<FK>>
+  * calle: VARCHAR(255)
+  * colonia: VARCHAR(255)
+  * ciudad: VARCHAR(255)
+  * estado: VARCHAR(255)
+  * codigo_postal: VARCHAR(20)
+  * pais: VARCHAR(100)
+  principal: BOOLEAN
+}
+
+table(categorias) {
+  * id: UUID <<PK>>
+  * nombre: VARCHAR(255) <<UNIQUE>>
+  descripcion: TEXT
+  padre_id: UUID <<FK>>
+}
+
+table(productos) {
+  * id: UUID <<PK>>
+  * nombre: VARCHAR(255)
+  descripcion: TEXT
+  * precio: DECIMAL(10,2)
+  * stock: INTEGER
+  * categoria_id: UUID <<FK>>
+  imagen_url: VARCHAR(500)
+  * activo: BOOLEAN
+}
+
+table(resenias) {
+  * id: UUID <<PK>>
+  * usuario_id: UUID <<FK>>
+  * producto_id: UUID <<FK>>
+  * calificacion: INTEGER
+  comentario: TEXT
+  * fecha: TIMESTAMP
+}
+
+table(carritos) {
+  * id: UUID <<PK>>
+  * usuario_id: UUID <<FK>> <<UNIQUE>>
+}
+
+table(carrito_items) {
+  * id: UUID <<PK>>
+  * carrito_id: UUID <<FK>>
+  * producto_id: UUID <<FK>>
+  * cantidad: INTEGER
+}
+
+table(wishlists) {
+  * id: UUID <<PK>>
+  * usuario_id: UUID <<FK>>
+}
+
+table(wishlist_items) {
+  * id: UUID <<PK>>
+  * wishlist_id: UUID <<FK>>
+  * producto_id: UUID <<FK>>
+}
+
+table(pedidos) {
+  * id: UUID <<PK>>
+  * usuario_id: UUID <<FK>>
+  * direccion_id: UUID <<FK>>
+  staff_id: UUID <<FK>>
+  cupon_id: UUID <<FK>>
+  * subtotal: DECIMAL(10,2)
+  descuento: DECIMAL(10,2)
+  * total: DECIMAL(10,2)
+  * estado: VARCHAR(20)
+  * fecha_creacion: TIMESTAMP
+  fecha_actualizacion: TIMESTAMP
+}
+
+table(pedido_items) {
+  * id: UUID <<PK>>
+  * pedido_id: UUID <<FK>>
+  * producto_id: UUID <<FK>>
+  * cantidad: INTEGER
+  * precio_unitario: DECIMAL(10,2)
+  * subtotal: DECIMAL(10,2)
+}
+
+table(pagos) {
+  * id: UUID <<PK>>
+  * pedido_id: UUID <<FK>> <<UNIQUE>>
+  * monto: DECIMAL(10,2)
+  * metodo_pago: VARCHAR(50)
+  transaccion_id: VARCHAR(255)
+  * estado: VARCHAR(20)
+  * fecha: TIMESTAMP
+}
+
+table(envios) {
+  * id: UUID <<PK>>
+  * pedido_id: UUID <<FK>> <<UNIQUE>>
+  * direccion: TEXT
+  * transportista: VARCHAR(100)
+  numero_guia: VARCHAR(100)
+  * estado: VARCHAR(20)
+  fecha_envio: TIMESTAMP
+  fecha_entrega: TIMESTAMP
+}
+
+table(cupones) {
+  * id: UUID <<PK>>
+  * codigo: VARCHAR(50) <<UNIQUE>>
+  * tipo_descuento: VARCHAR(20)
+  * valor_descuento: DECIMAL(10,2)
+  monto_minimo: DECIMAL(10,2)
+  * usos_maximos: INTEGER
+  * usos_actuales: INTEGER
+  * fecha_expiracion: TIMESTAMP
+  * activo: BOOLEAN
+}
+
+direcciones }o--|| users : usuario_id
+categorias }o--|| categorias : padre_id
+productos }o--|| categorias : categoria_id
+resenias }o--|| users : usuario_id
+resenias }o--|| productos : producto_id
+carritos |o--|| users : usuario_id
+carrito_items }o--|| carritos : carrito_id
+carrito_items }o--|| productos : producto_id
+wishlists }o--|| users : usuario_id
+wishlist_items }o--|| wishlists : wishlist_id
+wishlist_items }o--|| productos : producto_id
+pedidos }o--|| users : usuario_id
+pedidos }o--|| direcciones : direccion_id
+pedidos }o--|| users : staff_id
+pedidos }o--|| cupones : cupon_id
+pedido_items }o--|| pedidos : pedido_id
+pedido_items }o--|| productos : producto_id
+pagos |o--|| pedidos : pedido_id
+envios |o--|| pedidos : pedido_id
+@enduml
