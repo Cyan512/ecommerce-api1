@@ -10,6 +10,7 @@ import java.util.UUID;
 public class PedidoResponse {
 
     private UUID id;
+    private String usuarioEmail;
     private String estado;
     private BigDecimal total;
     private LocalDateTime fechaCreacion;
@@ -17,8 +18,9 @@ public class PedidoResponse {
 
     public PedidoResponse() {}
 
-    public PedidoResponse(UUID id, String estado, BigDecimal total, LocalDateTime fechaCreacion, List<ItemResponse> items) {
+    public PedidoResponse(UUID id, String usuarioEmail, String estado, BigDecimal total, LocalDateTime fechaCreacion, List<ItemResponse> items) {
         this.id = id;
+        this.usuarioEmail = usuarioEmail;
         this.estado = estado;
         this.total = total;
         this.fechaCreacion = fechaCreacion;
@@ -27,6 +29,8 @@ public class PedidoResponse {
 
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
+    public String getUsuarioEmail() { return usuarioEmail; }
+    public void setUsuarioEmail(String usuarioEmail) { this.usuarioEmail = usuarioEmail; }
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
     public BigDecimal getTotal() { return total; }

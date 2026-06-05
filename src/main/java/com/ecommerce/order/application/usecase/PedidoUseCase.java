@@ -10,6 +10,8 @@ import com.ecommerce.order.domain.port.PedidoItemRepositoryPort;
 import com.ecommerce.order.domain.port.PedidoRepositoryPort;
 import com.ecommerce.product.domain.model.Producto;
 import com.ecommerce.product.domain.port.ProductoRepositoryPort;
+import com.ecommerce.user.domain.model.User;
+import com.ecommerce.user.domain.port.UserRepositoryPort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,19 +27,25 @@ public class PedidoUseCase {
     private final PedidoItemRepositoryPort pedidoItemRepository;
     private final ProductoRepositoryPort productoRepository;
     private final CuponRepositoryPort cuponRepository;
+    private final UserRepositoryPort userRepository;
 
     public PedidoUseCase(PedidoRepositoryPort pedidoRepository,
                          PedidoItemRepositoryPort pedidoItemRepository,
                          ProductoRepositoryPort productoRepository,
-                         CuponRepositoryPort cuponRepository) {
+                         CuponRepositoryPort cuponRepository,
+                         UserRepositoryPort userRepository) {
         this.pedidoRepository = pedidoRepository;
         this.pedidoItemRepository = pedidoItemRepository;
         this.productoRepository = productoRepository;
         this.cuponRepository = cuponRepository;
+        this.userRepository = userRepository;
     }
 
     public List<PedidoResponse> findByUsuario(UUID usuarioId) {
-        return pedidoRepository.findByUsuarioId(usuarioId).stream()
+        List<Pedido> pedidos = usuarioId != null
+                ? pedidoRepository.findByUsuarioId(usuarioId)
+                : pedidoRepository.findAll();
+        return pedidos.stream()
                 .map(this::buildResponse)
                 .collect(Collectors.toList());
     }
@@ -124,7 +132,10 @@ public class PedidoUseCase {
                     item.getCantidad(), item.getPrecioUnitario(), item.getSubtotal());
         }).collect(Collectors.toList());
 
-        return new PedidoResponse(pedido.getId(), pedido.getEstado().name(),
+        String email = userRepository.findById(pedido.getUsuarioId())
+                .map(User::getEmail).orElse(null);
+
+        return new PedidoResponse(pedido.getId(), email, pedido.getEstado().name(),
                 pedido.getTotal(), pedido.getFechaCreacion(), itemResponses);
     }
 }

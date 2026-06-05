@@ -178,9 +178,31 @@ Requieren rol `ADMINISTRADOR`.
 
 ### `GET /api/admin/orders`
 
-Listar todos los pedidos.
+Listar todos los pedidos del sistema, incluyendo el email del cliente.
 
-**Respuesta — `200 OK`:** array de pedidos.
+**Respuesta — `200 OK`:**
+```json
+[
+  {
+    "id": "b2f09df0-...",
+    "usuarioEmail": "cliente@example.com",
+    "estado": "PENDIENTE",
+    "total": 22500.00,
+    "fechaCreacion": "2026-06-04T17:22:11",
+    "items": [
+      {
+        "productoId": "f584f911-...",
+        "productoNombre": "Laptop Gamer",
+        "cantidad": 1,
+        "precioUnitario": 25000.00,
+        "subtotal": 25000.00
+      }
+    ]
+  }
+]
+```
+
+> `usuarioEmail` será `null` si el usuario fue eliminado.
 
 ---
 

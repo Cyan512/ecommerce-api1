@@ -9,6 +9,7 @@ import com.ecommerce.user.domain.model.Cliente;
 import com.ecommerce.user.domain.model.TipoUsuario;
 import com.ecommerce.user.domain.model.User;
 import com.ecommerce.user.domain.model.Vendedor;
+import com.ecommerce.order.domain.port.PedidoRepositoryPort;
 import com.ecommerce.user.domain.port.UserRepositoryPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,12 +26,15 @@ public class AdminUserUseCase {
     private final UserRepositoryPort userRepository;
     private final PasswordEncoder passwordEncoder;
     private final String defaultAdminEmail;
+    private final PedidoRepositoryPort pedidoRepository;
 
     public AdminUserUseCase(UserRepositoryPort userRepository,
                             PasswordEncoder passwordEncoder,
+                            PedidoRepositoryPort pedidoRepository,
                             @Value("${app.default-admin.email}") String defaultAdminEmail) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.pedidoRepository = pedidoRepository;
         this.defaultAdminEmail = defaultAdminEmail;
     }
 
@@ -87,6 +91,9 @@ public class AdminUserUseCase {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario", id));
         if (user.getEmail().equals(defaultAdminEmail)) {
             throw new BusinessException("No se puede eliminar la cuenta administradora por defecto");
+        }
+        if (!pedidoRepository.findByUsuarioId(id).isEmpty()) {
+            throw new BusinessException("No se puede eliminar el usuario porque tiene pedidos asociados. Bloquéelo en su lugar.");
         }
         userRepository.deleteById(id);
     }
