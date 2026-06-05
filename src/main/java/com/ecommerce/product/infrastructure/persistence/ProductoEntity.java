@@ -1,5 +1,6 @@
 package com.ecommerce.product.infrastructure.persistence;
 
+import com.ecommerce.category.infrastructure.persistence.CategoriaEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -28,6 +29,10 @@ public class ProductoEntity {
     @Column(name = "categoria_id", nullable = false)
     private UUID categoriaId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", insertable = false, updatable = false)
+    private CategoriaEntity categoria;
+
     @Column(name = "imagen_url")
     private String imagenUrl;
 
@@ -46,6 +51,8 @@ public class ProductoEntity {
     public void setStock(int stock) { this.stock = stock; }
     public UUID getCategoriaId() { return categoriaId; }
     public void setCategoriaId(UUID categoriaId) { this.categoriaId = categoriaId; }
+    public CategoriaEntity getCategoria() { return categoria; }
+    public void setCategoria(CategoriaEntity categoria) { this.categoria = categoria; }
     public String getImagenUrl() { return imagenUrl; }
     public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
     public boolean isActivo() { return activo; }

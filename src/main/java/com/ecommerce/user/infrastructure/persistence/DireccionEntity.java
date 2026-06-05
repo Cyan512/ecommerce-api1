@@ -15,6 +15,10 @@ public class DireccionEntity {
     @Column(name = "usuario_id", nullable = false)
     private UUID usuarioId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
+    private UserEntity usuario;
+
     @Column(nullable = false)
     private String calle;
 

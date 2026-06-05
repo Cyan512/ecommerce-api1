@@ -20,6 +20,10 @@ public class PagoEntity {
     @Column(name = "pedido_id", nullable = false, unique = true)
     private UUID pedidoId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pedido_id", insertable = false, updatable = false)
+    private PedidoEntity pedido;
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal monto;
 
@@ -40,6 +44,8 @@ public class PagoEntity {
     public void setId(UUID id) { this.id = id; }
     public UUID getPedidoId() { return pedidoId; }
     public void setPedidoId(UUID pedidoId) { this.pedidoId = pedidoId; }
+    public PedidoEntity getPedido() { return pedido; }
+    public void setPedido(PedidoEntity pedido) { this.pedido = pedido; }
     public BigDecimal getMonto() { return monto; }
     public void setMonto(BigDecimal monto) { this.monto = monto; }
     public String getMetodoPago() { return metodoPago; }
