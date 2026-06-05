@@ -220,12 +220,22 @@ PostgreSQL
 |---|---|---|---|
 | GET | `/api/coupons/{codigo}` | — | Consultar cupón |
 
-### Admin
+### Admin — Órdenes
 
 | Método | Ruta | Auth | Descripción |
 |---|---|---|---|
 | GET | `/api/admin/orders` | ADMIN | Todos los pedidos |
 | PUT | `/api/admin/orders/{id}/status` | ADMIN | Cambiar estado pedido |
+
+### Admin — Usuarios
+
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| GET | `/api/admin/users` | ADMIN | Listar todos los usuarios |
+| POST | `/api/admin/users` | ADMIN | Crear usuario (CLIENTE/VENDEDOR/ADMINISTRADOR) |
+| PUT | `/api/admin/users/{id}/block` | ADMIN | Bloquear usuario |
+| PUT | `/api/admin/users/{id}/unblock` | ADMIN | Desbloquear usuario |
+| DELETE | `/api/admin/users/{id}` | ADMIN | Eliminar usuario |
 
 ---
 
