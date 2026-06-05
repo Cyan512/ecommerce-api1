@@ -10,6 +10,7 @@ import com.ecommerce.user.domain.model.TipoUsuario;
 import com.ecommerce.user.domain.model.User;
 import com.ecommerce.user.domain.model.Vendedor;
 import com.ecommerce.user.domain.port.UserRepositoryPort;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,14 @@ public class AdminUserUseCase {
 
     private final UserRepositoryPort userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final String defaultAdminEmail;
 
-    public AdminUserUseCase(UserRepositoryPort userRepository, PasswordEncoder passwordEncoder) {
+    public AdminUserUseCase(UserRepositoryPort userRepository,
+                            PasswordEncoder passwordEncoder,
+                            @Value("${app.default-admin.email}") String defaultAdminEmail) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.defaultAdminEmail = defaultAdminEmail;
     }
 
     public List<AdminUserResponse> findAll() {
@@ -78,10 +83,35 @@ public class AdminUserUseCase {
     }
 
     public void delete(UUID id) {
-        if (userRepository.findById(id).isEmpty()) {
-            throw new ResourceNotFoundException("Usuario", id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", id));
+        if (user.getEmail().equals(defaultAdminEmail)) {
+            throw new BusinessException("No se puede eliminar la cuenta administradora por defecto");
         }
         userRepository.deleteById(id);
+    }
+
+    public void changePassword(UUID userId, String currentPassword, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", userId));
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new BusinessException("La contraseña actual no es correcta");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public AdminUserResponse changeNombre(UUID userId, String nuevoNombre) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", userId));
+        user.setNombre(nuevoNombre);
+        return toResponse(userRepository.save(user));
+    }
+
+    public AdminUserResponse profile(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario", userId));
+        return toResponse(user);
     }
 
     private AdminUserResponse toResponse(User user) {

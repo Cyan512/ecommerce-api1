@@ -206,6 +206,14 @@ PostgreSQL
 | POST | `/api/wishlist/items` | CLIENT | Agregar producto |
 | DELETE | `/api/wishlist/items/{id}` | CLIENT | Eliminar item |
 
+### Perfil de Usuario
+
+| Método | Ruta | Auth | Descripción |
+|---|---|---|---|
+| GET | `/api/profile` | Authenticated | Perfil del usuario autenticado |
+| PUT | `/api/profile/password` | Authenticated | Cambiar contraseña |
+| PUT | `/api/profile/nombre` | Authenticated | Cambiar nombre |
+
 ### Direcciones
 
 | Método | Ruta | Auth | Descripción |
@@ -278,6 +286,19 @@ PostgreSQL
 
 ---
 
+## Componentes de Sistema
+
+### DataInitializer
+- `config/DataInitializer.java` — `ApplicationRunner` que crea el admin por defecto al primer inicio (base vacía).
+- Configurable vía `DEFAULT_ADMIN_EMAIL`, `DEFAULT_ADMIN_PASSWORD`, `DEFAULT_ADMIN_NAME`.
+- Cuenta protegida contra eliminación (validada por email).
+
+### EnvConfig
+- `config/EnvConfig.java` — Carga las variables del archivo `.env` en la raíz del proyecto usando `PropertySourcesPlaceholderConfigurer`.
+- Permite ejecutar la app sin pasar variables de entorno en el comando.
+
+---
+
 ## Estado del Proyecto
 
-API completamente implementada con 14 tablas en PostgreSQL, autenticación JWT + OAuth2, CRUD completo de productos/categorías/pedidos, carrito, wishlist, reseñas, direcciones, cupones y role-based access control.
+API completamente implementada con 14 tablas en PostgreSQL, autenticación JWT + OAuth2, CRUD completo de productos/categorías/pedidos/usuarios, carrito, wishlist, reseñas, direcciones, cupones, perfil de usuario, admin seed automático y role-based access control.

@@ -144,6 +144,97 @@ Authorization: Bearer <token>
 
 ---
 
+## Endpoints — Perfil del Usuario Autenticado
+
+Requieren JWT válido (cualquier rol).
+
+### `GET /api/profile`
+
+Obtener perfil del usuario autenticado.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+
+**Respuesta — `200 OK`:**
+```json
+{
+  "id": "95a071a7-...",
+  "email": "admin@ecommerce.com",
+  "nombre": "Administrador",
+  "tipo": "ADMINISTRADOR",
+  "activo": true
+}
+```
+
+---
+
+### `PUT /api/profile/password`
+
+Cambiar la contraseña del usuario autenticado.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "currentPassword": "Admin123!",
+  "newPassword": "NuevaPass123!"
+}
+```
+
+| Campo | Tipo | Requerido |
+|---|---|---|
+| `currentPassword` | string | ✅ |
+| `newPassword` | string | ✅ |
+
+**Respuesta — `200 OK`:**
+```json
+{
+  "message": "Contraseña actualizada correctamente"
+}
+```
+
+**Errores:**
+- `400` — currentPassword incorrecta
+
+---
+
+### `PUT /api/profile/nombre`
+
+Cambiar el nombre del usuario autenticado.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "nombre": "Nuevo Nombre"
+}
+```
+
+**Respuesta — `200 OK`:**
+```json
+{
+  "id": "95a071a7-...",
+  "email": "admin@ecommerce.com",
+  "nombre": "Nuevo Nombre",
+  "tipo": "ADMINISTRADOR",
+  "activo": true
+}
+```
+
+---
+
 ## Endpoints — Admin Usuarios
 
 Requieren rol `ADMINISTRADOR`.
@@ -256,6 +347,9 @@ Desbloquear un usuario (habilitar acceso).
 Eliminar un usuario permanentemente.
 
 **Respuesta — `204 No Content`**
+
+**Errores:**
+- `409` — no se puede eliminar la cuenta administradora por defecto (`admin@ecommerce.com`)
 
 ---
 

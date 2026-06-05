@@ -20,5 +20,7 @@ public interface UserRepositoryPort {
 
     List<User> findAll();
 
+    long count();
+
     void deleteById(UUID id);
 }
