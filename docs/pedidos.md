@@ -121,6 +121,7 @@ Crear un pedido. Reduce el stock de los productos automáticamente.
 ```json
 {
   "id": "b2f09df0-...",
+  "usuarioEmail": "comprador@test.com",
   "estado": "PENDIENTE",
   "total": 22500.00,
   "fechaCreacion": "2026-06-04T17:22:11",
@@ -151,6 +152,7 @@ Obtener los pedidos del usuario autenticado.
 [
   {
     "id": "b2f09df0-...",
+    "usuarioEmail": "comprador@test.com",
     "estado": "PENDIENTE",
     "total": 22500.00,
     "fechaCreacion": "2026-06-04T17:22:11",
@@ -266,6 +268,7 @@ Consultar un cupón por código.
 ```json
 {
   "id": "UUID",
+  "usuarioEmail": "string | null",
   "estado": "string",
   "total": "number",
   "fechaCreacion": "datetime",

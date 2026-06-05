@@ -64,6 +64,13 @@ public class ProductoUseCase {
         return toResponse(productoRepository.save(producto));
     }
 
+    public ProductoResponse updateImage(UUID id, String imagenUrl) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto", id));
+        producto.setImagenUrl(imagenUrl);
+        return toResponse(productoRepository.save(producto));
+    }
+
     public void delete(UUID id) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto", id));
