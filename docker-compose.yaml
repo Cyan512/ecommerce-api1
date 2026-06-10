@@ -19,7 +19,7 @@ services:
   app:
     build: .
     ports:
-      - "8081:${SERVER_PORT:-8080}"
+      - "8081:8081"
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -28,21 +28,27 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       JPA_DDL_AUTO: ${JPA_DDL_AUTO:-update}
       JPA_SHOW_SQL: ${JPA_SHOW_SQL:-true}
-      SERVER_PORT: ${SERVER_PORT:-8080}
+
       OAUTH2_CLIENT_ID: ${OAUTH2_CLIENT_ID}
       OAUTH2_CLIENT_SECRET: ${OAUTH2_CLIENT_SECRET}
+
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+
       DEFAULT_ADMIN_EMAIL: ${DEFAULT_ADMIN_EMAIL:-admin@ecommerce.com}
       DEFAULT_ADMIN_PASSWORD: ${DEFAULT_ADMIN_PASSWORD:-Admin123!}
       DEFAULT_ADMIN_NAME: ${DEFAULT_ADMIN_NAME:-Administrador}
+
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+
     depends_on:
       postgres:
         condition: service_healthy
+
     restart: unless-stopped
 
 volumes:
